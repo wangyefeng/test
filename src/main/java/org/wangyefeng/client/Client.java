@@ -12,12 +12,12 @@ import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import org.wangyefeng.ProtobufDecoder;
 import org.wangyefeng.ProtobufEncode;
 
-public class EchoClient {
+public class Client {
 
     private final String host;
     private final int port;
 
-    public EchoClient(String host, int port) {
+    public Client(String host, int port) {
         this.host = host;
         this.port = port;
     }
@@ -26,6 +26,8 @@ public class EchoClient {
         EventLoopGroup group = new NioEventLoopGroup();
         try {
             Bootstrap bootstrap = new Bootstrap();
+            ProtobufEncode protobufEncode = new ProtobufEncode();
+            ClientHandler handler = new ClientHandler();
             bootstrap.group(group)
                      .channel(NioSocketChannel.class)
                      .handler(new ChannelInitializer<SocketChannel>() {
@@ -34,8 +36,8 @@ public class EchoClient {
                              ChannelPipeline pipeline = ch.pipeline();
                              pipeline.addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4));
                              pipeline.addLast(new ProtobufDecoder());
-                             pipeline.addLast(new ProtobufEncode());
-                             pipeline.addLast(new EchoClientHandler());
+                             pipeline.addLast(protobufEncode);
+                             pipeline.addLast(handler);
                          }
                      });
 
@@ -52,6 +54,6 @@ public class EchoClient {
     }
 
     public static void main(String[] args) throws Exception {
-        new EchoClient("127.0.0.1", 8888).run();
+        new Client("127.0.0.1", 8888).run();
     }
 }

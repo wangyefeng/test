@@ -3,9 +3,9 @@ package org.wangyefeng.server.handler;
 import com.google.protobuf.Message;
 import io.netty.channel.Channel;
 
-public abstract class AbstractNoMessageHandle implements Handler<Message> {
+public abstract class AbstractNoMessageHandler implements Handler<Message> {
 
-    public AbstractNoMessageHandle() {
+    public AbstractNoMessageHandler() {
     }
 
     public void handle(Channel channel, Message message) {

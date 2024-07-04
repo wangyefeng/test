@@ -12,7 +12,7 @@ public class Main {
 
     public static void main(String[] args) {
         registerHandler();
-        EchoServer server = EchoServer.getInstance();
+        Server server = Server.getInstance();
         log.info("Server is starting...");
         server.start(8888);
     }

@@ -16,14 +16,13 @@ import org.wangyefeng.ProtobufDecoder;
 import org.wangyefeng.ProtobufEncode;
 
 
+public class Server {
 
-public class EchoServer {
+    private static final Logger log = LoggerFactory.getLogger(Server.class);
 
-    private static final Logger log = LoggerFactory.getLogger(EchoServer.class);
+    private static Server instance = new Server();
 
-    private static EchoServer instance = new EchoServer();
-
-    public static EchoServer getInstance() {
+    public static Server getInstance() {
         return instance;
     }
 
@@ -31,7 +30,7 @@ public class EchoServer {
 
     private boolean isRunning = false;
 
-    private EchoServer() {
+    private Server() {
     }
 
     public void start(int port) {
@@ -42,6 +41,8 @@ public class EchoServer {
         EventLoopGroup workerGroup = new NioEventLoopGroup(); // 用于处理客户端连接
         try {
             ServerBootstrap bootstrap = new ServerBootstrap();
+            ProtobufEncode protobufEncode = new ProtobufEncode();
+            ServerHandler handler = new ServerHandler();
             bootstrap.group(bossGroup, workerGroup)
                      .channel(Epoll.isAvailable() ? EpollServerSocketChannel.class : NioServerSocketChannel.class)
                      .childHandler(new ChannelInitializer<SocketChannel>() {
@@ -51,8 +52,8 @@ public class EchoServer {
                              pipeline.addLast(new ReadTimeoutHandler(20));
                              pipeline.addLast(new LengthFieldBasedFrameDecoder(1024 * 10, 0, 4, 0, 4));
                              pipeline.addLast(new ProtobufDecoder());
-                             pipeline.addLast(new ProtobufEncode());
-                             pipeline.addLast(new EchoServerHandler());
+                             pipeline.addLast(protobufEncode);
+                             pipeline.addLast(handler);
                          }
                      });
             bootstrap.option(ChannelOption.SO_BACKLOG, 200);

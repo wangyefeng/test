@@ -49,8 +49,8 @@ public enum C2SProtocol implements Protocol {
         }
     }
 
-    public static boolean isIllegal(int code) {
-        return !PROTOCOLS.containsKey(code);
+    public static boolean match(int code) {
+        return PROTOCOLS.containsKey(code);
     }
 
     public static Parser getParser(int code) {

@@ -1,5 +1,6 @@
 package org.wangyefeng.client;
 
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import org.wangyefeng.protocol.C2SProtocol;
@@ -8,7 +9,8 @@ import org.wangyefeng.proto.Common;
 
 import java.util.concurrent.TimeUnit;
 
-public class EchoClientHandler extends SimpleChannelInboundHandler<ProtoBufMessage<?>> {
+@ChannelHandler.Sharable
+public class ClientHandler extends SimpleChannelInboundHandler<ProtoBufMessage<?>> {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {

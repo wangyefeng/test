@@ -8,7 +8,7 @@ import org.wangyefeng.ProtoBufMessage;
 import org.wangyefeng.protocol.S2CProtocol;
 
 
-public class PingHandler extends AbstractNoMessageHandle {
+public class PingHandler extends AbstractNoMessageHandler {
 
     private static final Logger log = LoggerFactory.getLogger(PingHandler.class);
 

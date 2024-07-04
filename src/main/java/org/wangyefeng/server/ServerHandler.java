@@ -1,6 +1,7 @@
 package org.wangyefeng.server;
 
 import com.google.protobuf.Message;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.timeout.ReadTimeoutException;
@@ -11,9 +12,10 @@ import org.wangyefeng.server.handler.Handler;
 
 import java.net.SocketException;
 
-public class EchoServerHandler extends SimpleChannelInboundHandler<ProtoBufMessage<?>> {
+@ChannelHandler.Sharable
+public class ServerHandler extends SimpleChannelInboundHandler<ProtoBufMessage<?>> {
 
-    private static final Logger log = LoggerFactory.getLogger(EchoServerHandler.class);
+    private static final Logger log = LoggerFactory.getLogger(ServerHandler.class);
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {

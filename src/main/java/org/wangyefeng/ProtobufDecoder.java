@@ -6,6 +6,7 @@ import io.netty.buffer.ByteBufInputStream;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import org.wangyefeng.protocol.C2SProtocol;
+import org.wangyefeng.util.Assert;
 
 import java.util.List;
 
@@ -21,9 +22,7 @@ public class ProtobufDecoder extends ByteToMessageDecoder {
     protected void decode(ChannelHandlerContext ctx, ByteBuf msg, List<Object> out)
             throws Exception {
         int code = msg.readInt();
-        if (C2SProtocol.isIllegal(code)) {
-            throw new Exception("Illegal code: " + code);
-        }
+        Assert.isTrue(C2SProtocol.match(code), "Invalid code: " + code);
         final int length = msg.readableBytes();
         if (length > 0) {
             ByteBufInputStream inputStream = new ByteBufInputStream(msg);
