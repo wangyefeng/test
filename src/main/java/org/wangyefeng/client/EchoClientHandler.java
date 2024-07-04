@@ -2,7 +2,7 @@ package org.wangyefeng.client;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import org.wangyefeng.C2SProtocol;
+import org.wangyefeng.protocol.C2SProtocol;
 import org.wangyefeng.ProtoBufMessage;
 import org.wangyefeng.proto.Common;
 

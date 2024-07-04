@@ -1,8 +1,10 @@
-package org.wangyefeng;
+package org.wangyefeng.protocol;
 
 public enum S2CProtocol implements Protocol {
 
     PONG(0),
+
+    LOGIN(1),
 
     ;
 

@@ -2,9 +2,7 @@ package org.wangyefeng.server.handler;
 
 import com.google.protobuf.Message;
 import io.netty.channel.Channel;
-import org.wangyefeng.C2SProtocol;
-import org.wangyefeng.ProtoBufMessage;
-import org.wangyefeng.Protocol;
+import org.wangyefeng.protocol.C2SProtocol;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +22,7 @@ public interface Handler<T extends Message> {
         return handlers.get(code);
     }
 
-    void handle(Channel channel, ProtoBufMessage<T> message);
+    void handle(Channel channel, T message);
 
     C2SProtocol getProtocol();
 

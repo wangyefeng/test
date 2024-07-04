@@ -2,15 +2,13 @@ package org.wangyefeng.server.handler;
 
 import com.google.protobuf.Message;
 import io.netty.channel.Channel;
-import org.wangyefeng.ProtoBufMessage;
 
 public abstract class AbstractNoMessageHandle implements Handler<Message> {
 
     public AbstractNoMessageHandle() {
     }
 
-    @Override
-    public void handle(Channel channel, ProtoBufMessage<Message> message) {
+    public void handle(Channel channel, Message message) {
         handle0(channel);
     }
 

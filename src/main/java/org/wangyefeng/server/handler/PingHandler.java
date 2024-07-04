@@ -3,9 +3,9 @@ package org.wangyefeng.server.handler;
 import io.netty.channel.Channel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wangyefeng.C2SProtocol;
+import org.wangyefeng.protocol.C2SProtocol;
 import org.wangyefeng.ProtoBufMessage;
-import org.wangyefeng.S2CProtocol;
+import org.wangyefeng.protocol.S2CProtocol;
 
 
 public class PingHandler extends AbstractNoMessageHandle {
@@ -17,7 +17,7 @@ public class PingHandler extends AbstractNoMessageHandle {
     @Override
     public void handle0(Channel channel) {
         log.info("Received a ping message from client.");
-        channel.writeAndFlush(PONG);
+        channel.writeAndFlush(PONG);// 回应PONG消息
     }
 
     @Override

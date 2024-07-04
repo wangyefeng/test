@@ -1,6 +1,7 @@
 package org.wangyefeng;
 
 import com.google.protobuf.Message;
+import org.wangyefeng.protocol.Protocol;
 
 public class ProtoBufMessage<T extends Message> {
 

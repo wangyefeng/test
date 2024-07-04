@@ -1,4 +1,4 @@
-package org.wangyefeng;
+package org.wangyefeng.protocol;
 
 public interface Protocol {
 

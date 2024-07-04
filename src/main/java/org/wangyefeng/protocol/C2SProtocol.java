@@ -1,4 +1,4 @@
-package org.wangyefeng;
+package org.wangyefeng.protocol;
 
 import com.google.protobuf.Parser;
 import org.wangyefeng.proto.Common;

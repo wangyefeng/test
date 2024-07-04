@@ -1,5 +1,6 @@
 package org.wangyefeng.server;
 
+import com.google.protobuf.Message;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.timeout.ReadTimeoutException;
@@ -22,8 +23,12 @@ public class EchoServerHandler extends SimpleChannelInboundHandler<ProtoBufMessa
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ProtoBufMessage message) {
-        Handler<?> handler = Handler.getHandler(message.getCode());
-        handler.handle(ctx.channel(), message);
+        Handler<Message> handler = (Handler<Message>) Handler.getHandler(message.getCode());
+        if (handler == null) {
+            log.warn("illegal message code: {}", message.getCode());
+            return;
+        }
+        handler.handle(ctx.channel(), message.getMessage());
     }
 
     @Override
