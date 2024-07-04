@@ -3,8 +3,8 @@ package org.wangyefeng.server.handler;
 import io.netty.channel.Channel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wangyefeng.C2SProtocol;
 import org.wangyefeng.ProtoBufMessage;
-import org.wangyefeng.Protocol;
 import org.wangyefeng.proto.Common;
 
 public class LoginHandle implements Handler<Common.PbInt> {
@@ -21,7 +21,7 @@ public class LoginHandle implements Handler<Common.PbInt> {
     }
 
     @Override
-    public Protocol getProtocol() {
-        return Protocol.LOGIN;
+    public C2SProtocol getProtocol() {
+        return C2SProtocol.LOGIN;
     }
 }

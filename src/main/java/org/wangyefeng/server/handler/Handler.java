@@ -2,6 +2,7 @@ package org.wangyefeng.server.handler;
 
 import com.google.protobuf.Message;
 import io.netty.channel.Channel;
+import org.wangyefeng.C2SProtocol;
 import org.wangyefeng.ProtoBufMessage;
 import org.wangyefeng.Protocol;
 
@@ -25,6 +26,6 @@ public interface Handler<T extends Message> {
 
     void handle(Channel channel, ProtoBufMessage<T> message);
 
-    Protocol getProtocol();
+    C2SProtocol getProtocol();
 
 }
