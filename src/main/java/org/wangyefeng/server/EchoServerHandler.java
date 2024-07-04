@@ -2,22 +2,44 @@ package org.wangyefeng.server;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.timeout.ReadTimeoutException;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.wangyefeng.ProtoBufMessage;
 import org.wangyefeng.server.handler.Handler;
 
-public class EchoServerHandler extends SimpleChannelInboundHandler<ProtoBufMessage> {
+import java.net.SocketException;
 
-    private static final Logger log = org.slf4j.LoggerFactory.getLogger(EchoServerHandler.class);
+public class EchoServerHandler extends SimpleChannelInboundHandler<ProtoBufMessage<?>> {
+
+    private static final Logger log = LoggerFactory.getLogger(EchoServerHandler.class);
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, ProtoBufMessage message) throws Exception {
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        super.channelActive(ctx);
+        log.info("Channel active: {}", ctx.channel());
+    }
+
+    @Override
+    protected void channelRead0(ChannelHandlerContext ctx, ProtoBufMessage message) {
         Handler.getHandler(message.getCode()).handle(ctx.channel(), message);
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        log.error("Exception caught in channel: {}", ctx.channel(), cause);
-        ctx.close();
+        if (cause instanceof SocketException) {
+            log.info("Socket exception {} channel: {}", cause.getMessage(), ctx.channel());
+        } else if (cause instanceof ReadTimeoutException) {
+            log.info("Read timeout: {}", ctx.channel());
+        } else {
+            log.error("Exception caught in channel: {}", ctx.channel(), cause);
+            ctx.close();
+        }
+    }
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        super.channelInactive(ctx);
+        log.info("Channel inactive: {}", ctx.channel());
     }
 }
