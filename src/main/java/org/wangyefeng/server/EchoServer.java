@@ -1,4 +1,4 @@
-package org.wyf.server;
+package org.wangyefeng.server;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
@@ -9,21 +9,37 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
-import org.wyf.ProtobufDecoder;
-import org.wyf.ProtobufEncode;
+import io.netty.handler.timeout.ReadTimeoutHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.wangyefeng.ProtobufDecoder;
+import org.wangyefeng.ProtobufEncode;
+
+
 
 public class EchoServer {
 
-    private final int port;
+    private static final Logger log = LoggerFactory.getLogger(EchoServer.class);
 
-    public EchoServer(int port) {
-        this.port = port;
+    private static EchoServer instance = new EchoServer();
+
+    public static EchoServer getInstance() {
+        return instance;
     }
 
-    public void run() throws Exception {
+    private Channel channel;
+
+    private boolean isRunning = false;
+
+    private EchoServer() {
+    }
+
+    public void start(int port) {
+        if (isRunning) {
+            throw new IllegalStateException("Server is already running");
+        }
         EventLoopGroup bossGroup = new NioEventLoopGroup(1); // 用于接收客户端连接
         EventLoopGroup workerGroup = new NioEventLoopGroup(); // 用于处理客户端连接
-
         try {
             ServerBootstrap bootstrap = new ServerBootstrap();
             bootstrap.group(bossGroup, workerGroup)
@@ -32,6 +48,7 @@ public class EchoServer {
                          @Override
                          public void initChannel(SocketChannel ch) {
                              ChannelPipeline pipeline = ch.pipeline();
+                             pipeline.addLast(new ReadTimeoutHandler(20));
                              pipeline.addLast(new LengthFieldBasedFrameDecoder(1024 * 10, 0, 4, 0, 4));
                              pipeline.addLast(new ProtobufDecoder());
                              pipeline.addLast(new ProtobufEncode());
@@ -49,20 +66,27 @@ public class EchoServer {
             bootstrap.childOption(ChannelOption.SO_SNDBUF, 1024 * 128); // 设置发送缓冲区大小
             // 绑定端口并启动服务器
             ChannelFuture future = bootstrap.bind(port).sync();
-            System.out.println("EchoServer started and listening on port " + port);
-
-            // 等待服务器 socket 关闭
-            future.channel().closeFuture().sync();
-        } finally {
-            // 关闭 EventLoopGroup，释放所有资源
+            channel = future.channel();
+            isRunning = true;
+            log.info("EchoServer started and listening on port {}", port);
+            channel.closeFuture().addListener((ChannelFutureListener) channelFuture -> {
+                isRunning = false;
+                log.warn("EchoServer stopped");
+                bossGroup.shutdownGracefully();
+                workerGroup.shutdownGracefully();
+            });
+        } catch (Exception e) {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
+            throw new RuntimeException(e);
         }
     }
 
-    public static void main(String[] args) throws Exception {
-        Handler.register(new PingHandler());
-        Handler.register(new LoginHandle());
-        new EchoServer(8888).run();
+    public Channel getChannel() {
+        return channel;
+    }
+
+    public boolean isRunning() {
+        return isRunning;
     }
 }

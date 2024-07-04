@@ -1,7 +1,7 @@
-package org.wyf;
+package org.wangyefeng;
 
 import com.google.protobuf.Parser;
-import org.wyf.proto.Common;
+import org.wangyefeng.proto.Common;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,9 +10,9 @@ public enum Protocol {
 
     PING(0),
 
-    LOGIN(1, Common.PbInt.parser()),
+    PONG(1),
 
-    PONG(2),
+    LOGIN(2, Common.PbInt.parser()),
 
     ;
 

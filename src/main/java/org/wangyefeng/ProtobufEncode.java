@@ -1,4 +1,4 @@
-package org.wyf;
+package org.wangyefeng;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufOutputStream;

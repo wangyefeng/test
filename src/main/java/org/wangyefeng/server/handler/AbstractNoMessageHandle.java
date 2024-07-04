@@ -1,8 +1,8 @@
-package org.wyf.server;
+package org.wangyefeng.server.handler;
 
 import com.google.protobuf.Message;
 import io.netty.channel.Channel;
-import org.wyf.ProtoBufMessage;
+import org.wangyefeng.ProtoBufMessage;
 
 public abstract class AbstractNoMessageHandle implements Handler<Message> {
 

@@ -1,4 +1,4 @@
-package org.wyf;
+package org.wangyefeng;
 
 import com.google.protobuf.Message;
 
@@ -8,8 +8,16 @@ public class ProtoBufMessage<T extends Message> {
 
     private T message;
 
+    public ProtoBufMessage(Protocol protocol) {
+        this(protocol.getCode());
+    }
+
+    public ProtoBufMessage(Protocol protocol, T message) {
+        this(protocol.getCode(), message);
+    }
+
     public ProtoBufMessage(int code) {
-        this.code = code;
+        this(code, null);
     }
 
     public ProtoBufMessage(int code, T message) {
