@@ -10,16 +10,16 @@ import java.util.Map;
 
 public interface Handler<T extends Message> {
 
-    Map<Integer, Handler<?>> handlers = new HashMap<>();
+    Map<Integer, Handler<? extends Message>> handlers = new HashMap<>();
 
-    static void register(Handler<?> handler) {
+    static void register(Handler<? extends Message> handler) {
         if (handlers.containsKey(handler.getProtocol().getCode())) {
             throw new IllegalArgumentException("Duplicate protocol:" + handler.getProtocol());
         }
         handlers.put(handler.getProtocol().getCode(), handler);
     }
 
-    static Handler<?> getHandler(int code) {
+    static Handler<? extends Message> getHandler(int code) {
         return handlers.get(code);
     }
 

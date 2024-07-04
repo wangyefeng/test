@@ -22,11 +22,12 @@ public class EchoServerHandler extends SimpleChannelInboundHandler<ProtoBufMessa
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ProtoBufMessage message) {
-        Handler.getHandler(message.getCode()).handle(ctx.channel(), message);
+        Handler<?> handler = Handler.getHandler(message.getCode());
+        handler.handle(ctx.channel(), message);
     }
 
     @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         if (cause instanceof SocketException) {
             log.info("Socket exception {} channel: {}", cause.getMessage(), ctx.channel());
         } else if (cause instanceof ReadTimeoutException) {
