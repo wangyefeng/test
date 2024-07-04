@@ -23,7 +23,7 @@ public class EchoServerHandler extends SimpleChannelInboundHandler<ProtoBufMessa
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ProtoBufMessage message) {
-        Handler<Message> handler = (Handler<Message>) Handler.getHandler(message.getCode());
+        Handler<Message> handler = Handler.getHandler(message.getCode());
         if (handler == null) {
             log.warn("illegal message code: {}", message.getCode());
             return;
