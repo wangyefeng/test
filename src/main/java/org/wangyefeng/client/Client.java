@@ -9,8 +9,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
-import org.wangyefeng.ProtobufDecoder;
-import org.wangyefeng.ProtobufEncode;
+import org.wangyefeng.ProtobufCodec;
 
 public class Client {
 
@@ -26,7 +25,6 @@ public class Client {
         EventLoopGroup group = new NioEventLoopGroup();
         try {
             Bootstrap bootstrap = new Bootstrap();
-            ProtobufEncode protobufEncode = new ProtobufEncode();
             ClientHandler handler = new ClientHandler();
             bootstrap.group(group)
                      .channel(NioSocketChannel.class)
@@ -35,8 +33,7 @@ public class Client {
                          protected void initChannel(SocketChannel ch) throws Exception {
                              ChannelPipeline pipeline = ch.pipeline();
                              pipeline.addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4));
-                             pipeline.addLast(new ProtobufDecoder());
-                             pipeline.addLast(protobufEncode);
+                             pipeline.addLast(new ProtobufCodec());
                              pipeline.addLast(handler);
                          }
                      });

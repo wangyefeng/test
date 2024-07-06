@@ -12,8 +12,7 @@ import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wangyefeng.ProtobufDecoder;
-import org.wangyefeng.ProtobufEncode;
+import org.wangyefeng.ProtobufCodec;
 
 
 public class Server {
@@ -41,7 +40,6 @@ public class Server {
         EventLoopGroup workerGroup = new NioEventLoopGroup(); // 用于处理客户端连接
         try {
             ServerBootstrap bootstrap = new ServerBootstrap();
-            ProtobufEncode protobufEncode = new ProtobufEncode();
             ServerHandler handler = new ServerHandler();
             bootstrap.group(bossGroup, workerGroup)
                      .channel(Epoll.isAvailable() ? EpollServerSocketChannel.class : NioServerSocketChannel.class)
@@ -51,8 +49,7 @@ public class Server {
                              ChannelPipeline pipeline = ch.pipeline();
                              pipeline.addLast(new ReadTimeoutHandler(20));
                              pipeline.addLast(new LengthFieldBasedFrameDecoder(1024 * 10, 0, 4, 0, 4));
-                             pipeline.addLast(new ProtobufDecoder());
-                             pipeline.addLast(protobufEncode);
+                             pipeline.addLast(new ProtobufCodec());
                              pipeline.addLast(handler);
                          }
                      });
